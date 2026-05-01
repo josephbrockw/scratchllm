@@ -177,3 +177,7 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 env-llm
 .DS_Store
+.ipynb_checkpoints/
+*.pt
+*.safetensors
+__pycache__/
