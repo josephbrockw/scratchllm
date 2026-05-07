@@ -181,3 +181,6 @@ env-llm
 *.pt
 *.safetensors
 __pycache__/
+
+gpt2/*
+*.pth
