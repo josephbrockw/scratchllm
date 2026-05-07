@@ -184,3 +184,7 @@ __pycache__/
 
 gpt2/*
 *.pth
+*.tsv
+*.csv
+sms_spam_collection
+sms_spam_collection.zip
