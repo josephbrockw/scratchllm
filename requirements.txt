@@ -7,3 +7,5 @@ tensorflow==2.21.0
 tqdm==4.67.3
 pandas==3.0.2
 matplotlib==3.10.9
+transformers==5.9.0
+scikit-learn==1.8.0
