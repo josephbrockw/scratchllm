@@ -186,6 +186,13 @@ gpt2/*
 *.pth
 *.tsv
 *.csv
+
+# HuggingFace Trainer / PEFT output directories
+**/checkpoint-*/
+**/runs/
+my_awesome_qa_model/
+lora-flan-t5-small/
+results/
 sms_spam_collection
 sms_spam_collection.zip
 data/sms_spam_collection*

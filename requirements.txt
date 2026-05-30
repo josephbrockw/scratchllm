@@ -9,3 +9,6 @@ pandas==3.0.2
 matplotlib==3.10.9
 transformers==5.9.0
 scikit-learn==1.8.0
+sentence-transformers==5.5.1
+faiss-cpu==1.14.2
+accelerate>=1.1.0
