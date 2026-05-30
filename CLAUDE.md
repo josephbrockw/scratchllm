@@ -87,10 +87,10 @@ Local-only, gitignored:
 
 ## Key dependencies
 
-* **torch** — model and training
-* **tiktoken** — GPT-2 BPE tokenizer
-* **numpy** — used by the GPT-2 weight loader
-* **tensorflow** — only needed by `gpt_download.py` to read the
+* **torch**: model and training
+* **tiktoken**: GPT-2 BPE tokenizer
+* **numpy**: used by the GPT-2 weight loader
+* **tensorflow**: only needed by `gpt_download.py` to read the
   published GPT-2 TF checkpoints
-* **matplotlib** — loss plots
-* **pandas** — only used in notebook 05 for the SMS spam dataset
+* **matplotlib**: loss plots
+* **pandas**: only used in notebook 05 for the SMS spam dataset
