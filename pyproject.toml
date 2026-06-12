@@ -15,6 +15,8 @@ dependencies = [
     "tiktoken",
     "numpy",
     "matplotlib",
+    "onnx>=1.21.0",
+    "netron>=9.1.1",
 ]
 
 [tool.setuptools.packages.find]

@@ -181,6 +181,8 @@ env-llm
 .ipynb_checkpoints/
 *.pt
 *.safetensors
+*.onnx
+*.onnx.data
 __pycache__/
 
 gpt2/*
