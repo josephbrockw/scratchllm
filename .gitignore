@@ -196,6 +196,13 @@ gpt2/*
 my_awesome_qa_model/
 lora-flan-t5-small/
 results/
+
+# Manim render outputs (regenerable by running the recipe)
+media/
+
+# Saved Hugging Face datasets (regenerable via load_dataset / save_to_disk)
+domain_specific/fine_tuning/data/
+*.arrow
 sms_spam_collection
 sms_spam_collection.zip
 data/sms_spam_collection*

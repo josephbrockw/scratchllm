@@ -1,2 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/Users/joewilkinson/Projects/scratchllm/domain_specific/fine_tuning/media/videos/generated_scene/480p15/partial_movie_files/MyScene/1584795214_1864251314_3106241052.mp4'

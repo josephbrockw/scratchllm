@@ -5,17 +5,38 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "scratchllm"
 version = "0.1.0"
-description = "A GPT-style decoder-only transformer built from scratch in PyTorch"
+description = "A personal ML/AI cookbook: notebooks and reusable code from the books and tutorials I work through"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13,<3.14"
 license = { text = "MIT" }
 authors = [{ name = "Joe Wilkinson" }]
 dependencies = [
-    "torch",
-    "tiktoken",
-    "numpy",
-    "matplotlib",
+    # core: the from-scratch transformer and the notebook runtime
+    "torch>=2.11.0",
+    "tiktoken>=0.12.0",
+    "numpy>=2.4.0",
+    "matplotlib>=3.10.0",
+    "requests>=2.32.0",
+    "tqdm>=4.67.0",
+    "jupyter>=1.1.0",
+    "ipykernel>=7.2.0",
+    # GPT-2 weight loading (gpt_download.py reads the published TF checkpoints)
+    "tensorflow>=2.21.0",
+    # Hugging Face stack for the domain-specific recipes
+    "transformers>=5.9.0",
+    "datasets>=3.0.0",
+    "accelerate>=1.1.0",
+    "peft>=0.14.0",
+    "sentence-transformers>=5.5.0",
+    "faiss-cpu>=1.14.0",
+    "scikit-learn>=1.8.0",
+    "pandas>=3.0.0",
+    "optuna>=4.9.0",
+    # rendering for the Manim code-generation recipe (needs ffmpeg on PATH)
+    "manim>=0.20.0",
+    # ONNX export, runtime, and graph visualization
     "onnx>=1.21.0",
+    "onnxruntime>=1.20.0",
     "netron>=9.1.1",
 ]
 

@@ -1,34 +1,72 @@
 # CLAUDE.md
 
-Guidance for Claude Code (claude.ai/code) when working in this repository.
+Guidance for Claude Code when working in this repository.
 
-## Project overview
+## What this is
 
-Educational project implementing a GPT-style decoder-only transformer
-from scratch in PyTorch, following Sebastian Raschka's _Build a Large
-Language Model (from Scratch)_. Organized as a small library
-(`scratchllm/`) plus six guided notebooks (`notebooks/`).
+A personal ML/AI cookbook. I work through books, tutorials, and my own
+ideas here and keep the parts worth reusing. It serves three goals, in
+priority order:
 
-**Important**: please explain everything and teach as we work through
-issues. The goal is for me to understand the technology more than to get
-something working.
+1. **Cookbook.** A durable, organized record of what I have learned.
+   Recipes should stay runnable and self-contained.
+2. **Portfolio.** This is public and meant to show I have studied and
+   understand these topics. The writing matters as much as the code (see
+   Voice rules).
+3. **Apple Silicon first.** Target MPS, then CUDA, then CPU.
+
+Teach as we go. The goal is for me to understand the technology, not just
+to get something working.
+
+## Sources
+
+The repo is organized one top-level directory per source material, with
+`scratchllm/` as the shared reusable library across them.
+
+| Directory | Source | Status |
+| --- | --- | --- |
+| `notebooks/` | Sebastian Raschka, *Build a Large Language Model (from Scratch)* | complete (01-06) |
+| `domain_specific/` | Guglielmo Iozzia, *Domain-Specific Small Language Models* | in progress |
+
+To add a new source: create a new top-level directory for it and add a
+row here. Do not rename the existing directories.
+
+## Voice rules
+
+The prose is part of the portfolio, so it has to read as if I wrote it.
+
+* **No em dashes.** Use commas, parentheses, or two sentences.
+* First person where natural. Plain and direct, no marketing or LLM
+  filler ("it's worth noting", "delve", "leverage" as a verb).
+* Comments explain why, not what. Assume the reader knows Python.
+* Define a concept in a sentence before using it.
+* Match the tone of the existing `notebooks/` cells, which set the style.
 
 ## Environment
 
+Single `uv`-managed venv on Python 3.13. All dependencies live in
+`pyproject.toml` (flat list); `uv.lock` is committed.
+
 ```bash
-python -m venv env-llm
-source env-llm/bin/activate
-pip install -r requirements.txt
-pip install -e .          # makes `from scratchllm import ...` work
+uv sync        # creates .venv (3.13), installs everything, scratchllm editable
 ```
 
-Python 3.13. Virtual environment lives in `env-llm/` (gitignored).
+In PyCharm, set the project interpreter to `.venv`. Notebooks run through
+that interpreter, so after changing dependencies run `uv sync` then
+Restart Kernel to pick the change up. `requirements.txt` and the old
+`env-llm` venv are gone; do not reintroduce them.
 
-## Repo layout
+## Devices
+
+Pick a device as MPS, then CUDA, then CPU rather than hardcoding one. Some
+ops are missing on MPS (set `PYTORCH_ENABLE_MPS_FALLBACK=1` when needed)
+and float64 is unsupported. Note any MPS workaround in a comment so the
+recipe stays reproducible.
+
+## Layout
 
 ```
-scratchllm/        Python package, the consolidated reusable code
-  __init__.py      re-exports the public surface
+scratchllm/        Shared library (source of truth for the from-scratch code)
   model.py         LayerNorm, GELU, FeedForward, MultiHeadAttention,
                    TransformerBlock, GPTModel
   data.py          GPTDatasetV1, create_dataloader_v1
@@ -39,58 +77,21 @@ scratchllm/        Python package, the consolidated reusable code
                    generate_and_print_sample
   weights.py       assign, load_weights_into_gpt
   plotting.py      plot_losses
-notebooks/         01 through 06, in build order
-data/              the-verdict.txt and the instruction-tuning JSON files
+notebooks/         Raschka book, 01-06 in build order
+domain_specific/   Iozzia book: fine_tuning/, inference/, onnx/
+data/              the-verdict.txt and instruction-tuning JSON
 gpt_download.py    GPT-2 weight downloader (Apache 2.0, third-party)
+lm-evaluation-harness/   Vendored EleutherAI eval harness (third-party)
 ```
 
-The notebooks build concepts up from scratch and then import the
-consolidated version from `scratchllm` once a piece has been
-introduced. When making changes, the package is the source of truth;
-notebooks should import from it rather than duplicate it.
+Notebooks build a concept by hand for teaching, then import the
+consolidated version from `scratchllm`. Edit the package, do not duplicate
+shared code back into notebooks.
 
-## Notebook progression
+## Artifacts
 
-1. **`01_preprocessing.ipynb`**: regex tokenizer with a hand-built vocab,
-   then BPE via `tiktoken`. Sliding-window dataset and dataloader. Token
-   and position embeddings.
-2. **`02_attention.ipynb`**: simplified dot-product attention, then
-   self-attention with learned Q/K/V, then causal masking, then
-   multi-head attention.
-3. **`03_architecture.ipynb`**: LayerNorm, GELU, FeedForward, residual
-   connections, TransformerBlock, full GPTModel.
-4. **`04_pretraining.ipynb`**: training loop, train/val split, periodic
-   eval, temperature and top-k sampling, loading OpenAI GPT-2 weights.
-5. **`05_classification.ipynb`**: fine-tune GPT-2 for binary spam
-   classification (freeze body, replace head, train on last-token
-   logits).
-6. **`06_instruction.ipynb`**: supervised instruction fine-tuning on
-   1,100 Alpaca-style examples, with padding-aware collation.
-
-## Data and checkpoints
-
-Data files committed to the repo (in `data/`):
-
-* `the-verdict.txt`: short story used as the pretraining corpus.
-* `instruction-data.json`: 1,100 instruction-tuning examples.
-* `instruction-data-with-response.json`: 110 held-out examples with
-  model responses.
-
-Local-only, gitignored:
-
-* `gpt2/` directory of OpenAI GPT-2 TF checkpoints (regenerate via
-  `gpt_download.download_and_load_gpt2(...)`).
-* `*.pth` checkpoint files (regenerate by running the training cells in
-  notebooks 04, 05, 06).
-* Downloaded SMS spam dataset under `data/sms_spam_collection*`
-  (notebook 05 redownloads on first run).
-
-## Key dependencies
-
-* **torch**: model and training
-* **tiktoken**: GPT-2 BPE tokenizer
-* **numpy**: used by the GPT-2 weight loader
-* **tensorflow**: only needed by `gpt_download.py` to read the
-  published GPT-2 TF checkpoints
-* **matplotlib**: loss plots
-* **pandas**: only used in notebook 05 for the SMS spam dataset
+Keep large or regenerable things out of git: `*.pth` checkpoints, `gpt2/`,
+Hugging Face output dirs (`*-finetuned/`, `checkpoint-*/`, `results/`,
+`saved/`), `media/`, `onnx_models/`, `*.onnx`, and the SMS spam dataset
+and csv splits. If you notice a heavy artifact already tracked by git,
+flag it rather than adding more.
